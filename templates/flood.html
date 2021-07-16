@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block awarenessactive %}active{% endblock awarenessactive %}
+{% block title %}
+Flood
+{% endblock title %}
+
+{% block body %}
+
+
+<div class="container my-3">
+
+<h1 class="my-3">{{fawareness.title}}</h1>
+<div class="my-3">{{fawareness.content|safe}}</div>
+
+</div>
+
+
+    {% endblock body %}

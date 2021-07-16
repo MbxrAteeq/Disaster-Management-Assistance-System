@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block blogactive %}active{% endblock blogactive %}
+{% block title %}
+My Blogs
+{% endblock title %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+<div class="container">
+  <h2 class="text-center my-3">My BLog</h2>
+  {% if blogs|length < 1 %}
+  <div style="text-align: center;padding-bottom: 10px;">
+  <h4>You haven't written any blog yet.</h4>
+  <a class="btn btn-primary btn-lg" href="/blogwrite" role="button">Write BLog</a>
+</div>
+  {% else %}
+  {% for blog in blogs %} 
+  <div class="my-4 p-3 border">
+    <a class="btn btn-primary my-2 my-sm-0" style="float:right;" href="/blogupdate/{{blog.title}}"
+      role="button">Update</a>
+    <a class="btn btn-primary my-2 my-sm-0" style="float:right;" href="/deleteblog/{{blog.title}}"
+      role="button">deleteblog</a>
+    <p class="mb-0 "> Article by <a href="#">{{blog.author}}</a></p>
+    <h4 class="text-dark"> <a href="/blogpost/{{blog.slug}}" class="text-dark">{{blog.title}}</a></h4>
+    <div>
+      {{blog.short_desc|slice:200}}...
+    </div>
+
+
+    <a href="/blogpost/{{blog.slug}}" class="text-dark">
+      <h5 style="color: blue;">Read More...</h5>
+    </a>
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+
+
+</div>
+{% endif %}
+
+
+
+
+
+{% endblock body %}

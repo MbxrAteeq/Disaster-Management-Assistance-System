@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% block eventsactive %}active{% endblock eventsactive %}
+{% block title %}
+Flood Events
+{% endblock title %}
+
+{% block additional_styles %}
+<style>
+   #div1 {
+    display: {{display}};
+   }
+   #div2 {
+    display: {{display2}};
+   }
+   #map{
+    height: 400px;
+       width: 100%;
+   }
+   .Earthquake {
+        column-count: 2;
+}
+</style>
+{% endblock additional_styles %}
+{% block body %}
+<!--Flood Events-->
+<div class="abc" id='div1'>
+   <h3 style="text-align: center;margin: 3px;">Flood Events</h3> 
+<div style="margin-left: 90px;margin-right: 90px;">
+<iframe width="100%" height="800" frameborder="0" scrolling="no" src="https://onedrive.live.com/embed?resid=EDCAC11E20956767%21431&authkey=%21AGkwst8aJtwnYtM&em=2&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True"></iframe>
+</div>
+</div>
+
+<div class="abc" id='div2'>
+   <h3 style="text-align: center;margin: 3px;">Flood Events Visualization</h3>
+   <div class="container" style="margin-left: 1px;padding: 0;" id='form'>
+    <form action="/Flood_Events/visual" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+                <select name="country" id="country" style="width: 20%;">
+                    <option value="all">All Countries</option>
+                    {% for c in Country %}
+                    <option value="{{c}}">{{c}}</option>
+                    {% endfor %}
+                </select>
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+        </div>
+    </form>
+</div>
+<h5 style="margin: 3px;">All Previous Floods Mapping</h5>
+<div>
+    <div id="map"></div>
+ </div>
+   <h5 style="margin: 3px;">No. of Floods happens per year</h5>
+   <div>
+   <canvas id="No_of_Earthquakes" width="400" height="150"></canvas>
+</div>
+   <script
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdnBgsXjTaRSv3_d5MOBpeCOuBghDWZK4&callback=initMap&libraries=&v=weekly"
+     async
+   ></script>
+  
+
+      <h5 style="margin: 3px;">No. of Deaths happens per Flood</h5>
+
+  <canvas id="No_of_Deaths" width="400" height="150"></canvas>
+<br>
+   <canvas id="No_of_Deaths_pie" width="400" height="150"></canvas>
+
+
+  <h5 style="margin: 3px;">No. of Displaced Peoples per Flood</h5>
+
+  <canvas id="No_of_Injureds" width="400" height="150"></canvas>
+<br>
+  <canvas id="No_of_Injureds_pie" width="400" height="150"></canvas>
+  <p>To see excel sheet of previous events data click here <a href="/Flood_Events/tabular">Excel Sheet</a></p>
+</div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 8,
+          center: { lat: 32.4392, lng: 74.4892 },
+        });
+        setMarkers(map);
+      }
+      const beaches = {{positions|safe}};
+
+      function setMarkers(map) {
+        const image = {
+          url:
+            "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+          size: new google.maps.Size(20, 32),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(0, 32),
+        };
+
+        const shape = {
+          coords: [1, 1, 1, 20, 18, 20, 18, 1],
+          type: "poly",
+        };
+
+        for (let i = 0; i < beaches.length; i++) {
+          const beach = beaches[i];
+          new google.maps.Marker({
+            position: { lat: beach[1], lng: beach[2] },
+            map,
+            icon: image,
+            shape: shape,
+            title: beach[0],
+          });
+        }
+      }
+
+
+
+
+
+
+
+
+
+var ctx = document.getElementById('No_of_Earthquakes').getContext('2d');
+var No_of_Earthquakes = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        datasets: [{
+            label: 'No. of Earthquake in Years',
+            data: {{data|safe}},
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            },{
+            label: 'Line Dataset',
+            data: {{data|safe}},
+
+            // Changes this dataset to become a line
+            type: 'line',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: false,
+            borderWidth: 2,
+        }],
+        labels: {{lebel|safe}},
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var ctx = document.getElementById('No_of_Deaths').getContext('2d');
+var No_of_Deaths = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        datasets: [{
+            label: 'No. of Earthquake in Years',
+            data: {{deaths|safe}},
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            },{
+            label: 'Line Dataset',
+            data: {{deaths|safe}},
+
+            // Changes this dataset to become a line
+            type: 'line',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: false,
+            borderWidth: 2,
+        }],
+        labels: {{deaths_years|safe}},
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+var ctx = document.getElementById('No_of_Deaths_pie').getContext('2d');
+var No_of_Deaths_pie = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        datasets: [{
+            data: {{dead_count|safe}},
+        backgroundColor: [
+                    '#1a8604',
+                    '#0839f0',
+                    '#e9f308',
+                    '#fe7a04',
+                    '#f61212',
+                    
+                ]
+        }],
+        labels: ['Low', 'Medium', 'High', 'Very High', 'Extreme']
+    },
+});
+var ctx = document.getElementById('No_of_Injureds_pie').getContext('2d');
+var No_of_Injureds_pie = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        datasets: [{
+            data: [1,1,1,1,1],
+        backgroundColor: [
+                    '#1a8604',
+                    '#0839f0',
+                    '#e9f308',
+                    '#fe7a04',
+                    '#f61212',
+                ]
+        }],
+        labels: ['Low', 'Medium', 'High', 'Very High', 'Extreme']
+    },
+});
+var ctx = document.getElementById('No_of_Injureds').getContext('2d');
+var No_of_Injureds = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        datasets: [{
+            label: 'No. of Earthquake in Years',
+            data: {{Displaced|safe}},
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            },{
+            label: 'Line Dataset',
+            data: {{Displaced|safe}},
+
+            // Changes this dataset to become a line
+            type: 'line',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: false,
+            borderWidth: 2,
+        }],
+        labels: {{Displaced_years|safe}},
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+
+
+
+
+
+{% endblock body %}

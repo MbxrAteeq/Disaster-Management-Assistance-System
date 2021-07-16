@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block adminactive %}active{% endblock adminactive %}
+{% block title %}
+Profile
+{% endblock title %}
+
+
+{% block additional_styles %}
+<style>
+  .header {
+    padding: 100px;
+    text-align: center;
+    height: 55px;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+  }
+
+  img {
+    border-radius: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .a {
+    text-align: center;
+    padding-top: 100px;
+  }
+
+  .kbio {
+    margin-bottom: 10px;
+    position: relative;
+    background-color: #fff;
+    border: #777 1px solid;
+    margin-right: 200px;
+    margin-left: 200px;
+  }
+
+  .bio {
+    padding-top: 8px;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+
+  .kbio label {
+    left: 0px;
+    padding: 0px 5px;
+    background-color: white;
+    color: #666;
+    position: absolute;
+    transform: scale(.75) translateY(-15px);
+  }
+
+  .column {
+    padding-top: 22px;
+    padding-right: 22px;
+    padding-left: 22px;
+    float: left;
+    width: 50%;
+  }
+
+  p {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    margin: 4px;
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .editbtn {
+    text-align:right;
+    margin-right: 200px;
+    margin-bottom: 10px;
+  }
+
+
+
+</style>
+{% endblock additional_styles %}
+
+
+{% block body %}
+
+
+<div class="abc">
+
+  <div class="header">
+
+
+    <div>
+      <img src="https://source.unsplash.com/200x200/?human,boy,girl" alt="Avatar">
+    </div>
+  </div>
+
+
+
+  <div class="a">
+    <h4>{{user.first_name}}
+      {{user.last_name}}
+    </h4>
+
+  </div>
+
+
+  <br>
+
+
+
+  <div class="kbio">
+    <label>Your Bio</label>
+    <div class="bio">
+      <p>asdfsjhef ashd </p>
+    </div>
+  </div>
+  <br>
+
+
+
+  <div class="kbio">
+    <label>Your Info</label>
+
+
+    <div class="row">
+
+      <div class="column">
+
+        <h6>Username:</h6>
+        <h6>First Name:</h6>
+        <h6>Last Name:</h6>
+        <h6>E-mail:</h6>
+
+      </div>
+
+
+
+      <div class="column">
+
+        <p>{{user.username}}</p>
+        <p>{{user.first_name}}</p>
+        <p>{{user.last_name}}</p>
+        <p>{{user.email}}</p>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+  <div class="editbtn">
+    <a href="/editprofile" class="btn btn-primary">Edit Profile</a>
+  </div>
+
+</div>
+
+
+
+
+{% endblock body %}
